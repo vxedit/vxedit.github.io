@@ -3,37 +3,151 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+    
+    <style>
+        body {
+          margin: 0;
+        }
+        .example-container {
+          overflow: hidden;
+          position: absolute;
+          width: 100%;
+          height: 100%;
+        }
+       
+        #example-scanning-overlay {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      background: transparent;
+      z-index: 2;
+        }
+        @media (min-aspect-ratio: 1/1) {
+      #example-scanning-overlay .inner {
+        width: 50vh;
+        height: 50vh;
+      }
+        }
+        @media (max-aspect-ratio: 1/1) {
+      #example-scanning-overlay .inner {
+        width: 80vw;
+        height: 80vw;
+      }
+        }
+  
+        #example-scanning-overlay .inner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+  
+      background:
+        linear-gradient(to right, white 10px, transparent 10px) 0 0,
+        linear-gradient(to right, white 10px, transparent 10px) 0 100%,
+        linear-gradient(to left, white 10px, transparent 10px) 100% 0,
+        linear-gradient(to left, white 10px, transparent 10px) 100% 100%,
+        linear-gradient(to bottom, white 10px, transparent 10px) 0 0,
+        linear-gradient(to bottom, white 10px, transparent 10px) 100% 0,
+        linear-gradient(to top, white 10px, transparent 10px) 0 100%,
+        linear-gradient(to top, white 10px, transparent 10px) 100% 100%;
+      background-repeat: no-repeat;
+      background-size: 40px 40px;
+        }
+  
+        #example-scanning-overlay.hidden {
+      display: none;
+        }
+  
+        #example-scanning-overlay img {
+      opacity: 0.6;
+      width: 90%;
+      align-self: center;
+        }
+  
+        #example-scanning-overlay .inner .scanline {
+      position: absolute;
+      width: 100%;
+      height: 10px;
+      background: white;
+      animation: move 2s linear infinite;
+        }
+        @keyframes move {
+      0%, 100% { top: 0% }
+      50% { top: calc(100% - 10px) }
+        }
+      </style>
   </head>
   <script>
-    const showPortfolio = () => {
-        document.querySelector("#video").play();
-    }    
+    const showText = (onDone,target) => {
+        const text = document.querySelector("#text-en");
+        let t = "UserName"
+        let slicedText = '';
+        let z = 0;
+        const id = setInterval(() => {
+          if (z >= t.length) {
+            clearInterval(id);
+            onDone();
+            return;
+          }
+        slicedText += t[z];
+        z++;
+        console.log(slicedText,'value of z:',z)
+        text.setAttribute("value", slicedText)
+        }, 500);
+        
+      }
+
      
     AFRAME.registerComponent('mytarget', {
         init: function () {
+            
           this.el.addEventListener('targetFound', event => {
+            
             console.log("target found");
-            showPortfolio();
+            document.querySelector("#video").play();
+            textAnimationId = showText(() => {
+        console.log("Text animation is complete.");
+                    });
           });
           this.el.addEventListener('targetLost', event => {
-            console.log("target found");
+            
+            console.log("target lost");
+            document.querySelector("#video").pause();
           });
         }
       });
   </script>
   <body>
+    <div id="example-scanning-overlay" class="hidden">
+        <div class="inner">
+          <img src="./assets/card-example/card.png"/>
+          <div class="scanline"></div>
+        </div>
+          </div>
     <!-- <a-scene mindar-image="imageTargetSrc: ./targets.mind; showStats: false; uiScanning: #example-scanning-overlay;" embedded color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false"> -->
     <a-scene mindar-image="imageTargetSrc: https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.2/examples/image-tracking/assets/card-example/card.mind; showStats: false; uiScanning: #example-scanning-overlay;" embedded color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
         <a-assets>
-        <video id="video" autoplay loop="true" src="./assets/card-example/portfolio/paintandquest.webm"></video>
-      </a-assets>
+            <video id="video" loop="true" src="./output.webm"></video>
+        </a-assets>
 
-      <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+        <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
         <a-entity id="mytarget" mytarget mindar-image-target="targetIndex: 0">
-            <a-video src="#video" position="0 0 0" rotation="0 0 0" width="1.0" height="0.6"></a-video>
+            <a-text value="" id="text-en" color="black" align="center" width="2" position="0 0.4 0"
+            animation="property: position; to: 0 0.5 0; dur: 1000; easing: easeInOutQuad; loop: true; dir: alternate"
+            ></a-text>
+            <a-video src="#video" position="0 0 0" rotation="0 0 0" width="1.0" height="0.6"
+            animation="property: scale; to: 0.8 0.8 0.8; dur: 1000; easing: easeInOutQuad; loop: true; dir: alternate"
+            ></a-video>
         </a-entity>
     </a-scene>
   </body>
 
 </html>
+
+<!-- <video id="video" autoplay loop="true" src="./assets/card-example/portfolio/paintandquest.webm"></video> -->
