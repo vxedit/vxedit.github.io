@@ -12,7 +12,8 @@
 	  arSystem = sceneEl.systems["mindar-image-system"];
 	});
 	const exampleTarget = document.querySelector('#example-target');
-	const examplePlane = document.querySelector('#example-plane');
+	const examplePlane = document.querySelector('#paintandquest-video-link');
+	console.log(examplePlane,"it is example plane")
 	const startButton = document.querySelector("#example-start-button");
 	const stopButton = document.querySelector("#example-stop-button");
 	const pauseButton = document.querySelector("#example-pause-button");
@@ -53,7 +54,10 @@
 	// detect click event
 	examplePlane.addEventListener("click", event => {
 	  console.log("plane click");
-      document.querySelector("#example-plane").play();
+	  	document.querySelector("#paintandquest-video-link").setAttribute("src", "#paintandquest-video-webm");
+    	document.querySelector("#paintandquest-video-webm").play();
+		// document.querySelector("#paintandquest-video-link").setAttribute("src", "#example-plane");
+      	// document.querySelector("#example-plane").play();
 	});
       });
     </script>
@@ -71,12 +75,14 @@
       <a-assets>
         <!-- <a-asset-item id="bearModel" src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/examples/image-tracking/assets/band-example/bear/scene.gltf"></a-asset-item>
         <a-asset-item id="raccoonModel" src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/examples/image-tracking/assets/band-example/raccoon/scene.gltf"></a-asset-item> -->
-        <video id="myVideo" preload muted autoplay="true" loop="true" src="https://vxedit.github.io/output.webm?v=1680745936939" crossorigin="anonymous"></video>
+        <!-- <video id="myVideo" autoplay="false" loop="true" src="./assets/card-example/portfolio/paintandquest.webm"></video> -->
+		<video id="paintandquest-video-webm" autoplay="false" loop="true" src="./assets/card-example/portfolio/paintandquest.webm"></video>
       </a-assets>
 
       <a-entity id="example-target" mindar-image-target="targetIndex: 1">
 	    <!-- <a-plane id="example-plane" class="clickable" color="blue" opaciy="0.5" position="0 0 0" height="0.552" width="1" rotation="0 0 0"></a-plane> -->
-        <a-video id="example-plane" class="clickable" src="#myVideo" position="0 0 0.5" height="1" width="1.818" rotation="80 0 0" autoplay></a-video>
+		<a-video id="paintandquest-video-link" webkit-playsinline playsinline width="1" height="0.552" position="0 0 0" src="#paintandquest-video-webm"></a-video>
+        <!-- <a-video id="example-plane" class="clickable" src="#myVideo" position="0 0 0.5" height="1" width="1.818" rotation="80 0 0" autoplay></a-video> -->
       </a-entity>
     </a-scene>
   </body>
