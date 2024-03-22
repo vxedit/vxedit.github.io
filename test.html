@@ -1,0 +1,39 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+  </head>
+  <script>
+    const showPortfolio = () => {
+        document.querySelector("#video").play();
+    }    
+     
+    AFRAME.registerComponent('mytarget', {
+        init: function () {
+          this.el.addEventListener('targetFound', event => {
+            console.log("target found");
+            showPortfolio();
+          });
+          this.el.addEventListener('targetLost', event => {
+            console.log("target found");
+          });
+        }
+      });
+  </script>
+  <body>
+    <!-- <a-scene mindar-image="imageTargetSrc: ./targets.mind; showStats: false; uiScanning: #example-scanning-overlay;" embedded color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false"> -->
+    <a-scene mindar-image="imageTargetSrc: https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.2/examples/image-tracking/assets/card-example/card.mind; showStats: false; uiScanning: #example-scanning-overlay;" embedded color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+        <a-assets>
+        <video id="video" autoplay loop="true" src="./assets/card-example/portfolio/paintandquest.webm"></video>
+      </a-assets>
+
+      <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
+        <a-entity id="mytarget" mytarget mindar-image-target="targetIndex: 0">
+            <a-video src="#video" position="0 0 0" rotation="0 0 0" width="1.0" height="0.6"></a-video>
+        </a-entity>
+    </a-scene>
+  </body>
+
+</html>
